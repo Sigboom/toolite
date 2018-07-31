@@ -12,3 +12,9 @@ some little tool for work.
 
 ##实现日志（18.7.30）
 - fopen函数打开一个文件后，将文件指针赋值给另一文件指针无法记录位置,即打开一次文件只能获取一个文件读取（写入）指针，变换文件指针位置使用fseek()函数
+
+##发现命令（18.7.31）
+- 了解到调整文件指针使用fseek()/fwind()两个函数<br>
+记录文件指针位置使用fgetpos(stream, &filepos)/fsetpos(stream, &filepos)/ftell(stream).<br>使用的类型是fpos_t.
+- 发现存在diff命令可以直接对文件和文件行与行进行对比并显示。
+- 至此暂停（推迟）实现diff

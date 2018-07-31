@@ -20,7 +20,10 @@ void mkfile(char*, char*);
 int main(int argc,char *argv[])
 {
     int opt=0;
-    char oneFile[MAXFILENAME], twoFile[MAXFILENAME];
+    char armFile[MAXFILENAME], modelFile[MAXFILENAME];
+    if (argc == 1) {
+        
+    }
     while((opt=getopt(argc,argv,"c"))!=-1)
     {
         switch(opt)
