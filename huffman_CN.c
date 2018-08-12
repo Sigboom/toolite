@@ -1,8 +1,8 @@
 /*************************************************************************
-	> File Name: huffman_CN.c
+	> File Name: huffman_cn.c
 	> Author: Daniel
 	> Mail: 292382967@qq.com
-	> Created Time: 一  8/ 6 23:03:38 2018
+	> Created Time: 六  8/11 21:52:27 2018
 ************************************************************************/
 
 #include <stdio.h>
@@ -19,7 +19,7 @@
 }
 
 typedef struct HFNode {
-    int ch;
+    unsigned char ch;
     int freq;
     struct HFNode *lchild, *rchild;
 } HFNode;
@@ -29,96 +29,256 @@ typedef struct TNode {
     struct TNode *child[BASE];
 } TNode;
 
-long room = 0;
+typedef struct Pattern {
+    unsigned char *str;
+    int freq;
+} Pattern;
 
-HFNode *get_HFNode() {
-    room += sizeof(HFNode);
-    return (HFNode*)calloc(sizeof(HFNode), 1);
+long memory = 0;
+int node_cnt = 0;
+long time0 = 0;
+
+HFNode *getNode();
+void build(int n, HFNode *arr[]);
+void extract(HFNode *root, char *buff, char (*huffman_code)[100], int n);
+void get_freq(FILE *fp, int *freq);
+void search(TNode *root, const char *arm, Pattern *p, int n,char huffman_code[][100]);
+void clear_trie(TNode *root);
+TNode *get_TNode();
+int get_pattern(int n, Pattern *p);
+void clear(Pattern *p, int n);
+TNode *insert_trie(TNode *root, const char *str);
+void output(Pattern*p, int n);
+void get_HFcode(FILE *fp, char (*huffman_code)[100]);
+void cntocode(const unsigned char *chinese, char *code, char (*huffman_code)[100]);
+void codetocn(char *chinese, char *code, char huffman_code[][100]);
+
+int main() {
+    FILE *fp = NULL;
+    char filename[MAXLINE];
+    char huffman_code[CHARMAX][100] = {0};
+    printf("亲，请输入已存在的初始化文件名：");
+    scanf("%s", filename);
+    fp = fopen(filename, "r");
+    get_HFcode(fp, huffman_code);
+    fclose(fp);
+
+    int n, i = 0, word_cnt = 0; 
+    char temp[MAXLINE] = {0};
+    Pattern*pattern = (Pattern*)malloc(sizeof(Pattern) * MAXLINE);
+    printf("亲，请输入已存在的模式串文件名：");
+    scanf("%s", filename);
+    fp = fopen(filename, "r");
+    while (fscanf(fp, "%s", temp) != EOF) {
+        word_cnt += strlen(temp);
+        pattern[i].str = (unsigned char*)malloc(sizeof(unsigned char) * (strlen(temp) + 1));
+        strcpy((char*)pattern[i].str, temp);
+        memory += sizeof(char) * strlen((char *)pattern[i].str);
+        pattern[i].freq = 0;
+        i++;
+    }
+    n = i;
+    memory += (sizeof(Pattern*) * n);
+    fclose(fp);
+
+    long time1 = clock();
+    char buff[MAXLINE * 10] = {0};
+    TNode *root = NULL;
+    for (int i = 0; i < n; ++i) {
+        memset(buff, 0, sizeof(buff));
+        cntocode(pattern[i].str, buff, huffman_code);
+        root = insert_trie(root, buff);
+    }
+    printf("字典树已建立完成！\n");
+    
+    long time2 = clock();
+    unsigned char arm[MAXLINE * 5];
+    printf("亲，请输入已存在的查找母串文件名：");
+    scanf("%s", filename);
+    long time3 = clock();
+    fp = fopen(filename, "r");
+    while (fscanf(fp, "%s", arm) != EOF) {
+        memset(buff, 0, sizeof(buff));
+        cntocode(arm, buff, huffman_code);
+        search(root, buff, pattern, n, huffman_code);
+    }
+    fclose(fp);
+    printf("查找结束!\n");
+    output(pattern, n);
+
+    clear_trie(root);
+    clear(pattern, n);
+    long time4 = clock();
+    memory += CHARMAX * 4;
+    
+    time0 += time2 - time1 + time4 - time3;
+    printf("run time:%ld, used memory:%ld\n", time0, memory);
+    printf("Haffman Double storage rate : %lf\n", 1.0 * word_cnt / (1.0 * node_cnt * sizeof(TNode)));
+    return 0;
 }
 
-TNode *get_TNode() {
-    room += sizeof(TNode);
-    return (TNode*)calloc(sizeof(TNode), 1);
+void cntocode(const unsigned char *chinese, char *code, char (*huffman_code)[100]) {
+    long time1 = clock();
+    for (int i = 0; chinese[i]; ++i) {
+        //printf("%d\n", chinese[i]);;
+        strcat(code, huffman_code[chinese[i]]);
+    }
+    long time2 = clock();
+    time0 -= time2 - time1;
 }
 
-void buildHF(int n, HFNode* arr[n]) {
-    for (int i = 0; i < n - 1; ++i) {
-        int min_ind = 0;
-        int min_freq = arr[0]->freq;
-        for (int j = 1; j < n - i; ++j) {
-            if (arr[j]->freq >= min_freq) continue;
-            min_freq = arr[j]->freq;
-            min_ind = j;       
+void codetocn(char *chinese, char *code, char huffman_code[256][100]){
+    int len = 0, k = 0;
+    for (int i = 0; i < 256; ++i) {
+        if(strncmp(code + len, huffman_code[i], strlen(huffman_code[i])) == 0) {
+            chinese[k++] = i;
+            if (!(code + len)) {
+                return;
+            }
+            len += strlen(huffman_code[i]);
+            i = 0;
         }
-        swap(arr[min_ind], arr[n - i - 1]);
-        min_ind = 0;
-        min_freq = arr[0]->freq;
-        for (int j = 1; j < n - i - 1; ++j) {
-            if (arr[j]->freq >= min_freq) continue;
-            min_freq = arr[j]->freq;
-            min_ind = j;
+    }
+}
+
+void get_freq(FILE *fp, int *freq){
+    unsigned char c;
+    if (fp == NULL) {
+        return ;
+    }
+    while (!feof(fp)) {
+        c = fgetc(fp);
+        if (!feof(fp)) {
+            freq[c] += 1;
         }
-        swap(arr[min_ind], arr[n - i - 2]);
-        HFNode*new_node = get_HFNode();
-        new_node->freq = arr[n - i - 1]->freq + arr[n - i - 2]->freq;
-        new_node->lchild = arr[n - i - 1];
-        new_node->rchild = arr[n - i - 2];
-        arr[n - i - 2] = new_node;
+    }
+    fclose(fp);
+}
+
+HFNode *getNode() {
+    HFNode *p = (HFNode *)malloc(sizeof(HFNode));
+    p->freq = p->ch = 0;
+    p->lchild = p->rchild = NULL;
+    return p;
+}
+
+void build(int n, HFNode *arr[]) {
+    for (int times = 0; times < n - 1; times++) {
+        HFNode *minNode = arr[0];
+        int ind = 0;
+
+        for (int i = 1; i < n - times; i++) {
+
+            if (arr[i]->freq >= minNode->freq) continue;
+
+            minNode = arr[i];
+            ind = i;
+        }
+
+        swap(arr[ind], arr[n - times - 1]);
+        minNode = arr[0];
+        ind = 0;
+        for (int i = 1; i < n - times - 1; i++) {
+            if (arr[i]->freq >= minNode->freq) continue;
+            minNode = arr[i];
+            ind = i;
+        }
+        swap(arr[ind], arr[n - times - 2]);
+        HFNode *new_node = getNode();
+        new_node->lchild = arr[n - times - 1];
+        new_node->rchild = arr[n - times - 2];
+        new_node->freq = arr[n - times - 1]->freq + arr[n - times - 2]->freq;
+        arr[n - times - 2] = new_node;
     }
     return ;
 }
 
-void extract(HFNode *root, char *buff, int n, char *huffman_code[CHARMAX]) {
+void extract(HFNode *root, char *buff, char (*huffman_code)[100], int n) {
     buff[n] = '\0';
+
     if (root->lchild == NULL && root->rchild == NULL) {
-        huffman_code[root->ch] = (char*)malloc(sizeof(char) * MAXLINE);
-        room += MAXLINE;
         strcpy(huffman_code[root->ch], buff);
+        //printf("%d ", root->ch);
         return ;
     }
     buff[n] = '0';
-    extract(root->lchild, buff, n + 1, huffman_code);
+    extract(root->lchild, buff, huffman_code, n + 1);
     buff[n] = '1';
-    extract(root->rchild, buff, n + 1, huffman_code);
+    extract(root->rchild, buff, huffman_code, n + 1);
     return ;
 }
 
-void show_huff(char **huffman_code) {
+void get_HFcode(FILE *fp, char (*huffman_code)[100]) {
+    int freq[CHARMAX] = {0};
+    get_freq(fp, freq);
     for (int i = 0; i < CHARMAX; ++i) {
-        if (huffman_code[i] == NULL) continue;
-        printf("huffman_code[%d]:%s\n", i, huffman_code[i]);
+        if (!freq[i]){
+            continue;
+        }
+        printf("%d %d \n", i, freq[i]);
+    }
+
+    HFNode *arr[CHARMAX] = {0};
+    char buff[100];
+    for (int i = 0; i < CHARMAX; ++i) {
+        HFNode *new_node = getNode();
+        new_node->ch = (char)i;
+        if(freq[i] == 0){
+            new_node->freq = 1;
+        } else {
+            new_node->freq = freq[i];
+        }
+        arr[i] = new_node;
+    }
+
+    build(CHARMAX, arr);
+    extract(arr[0], buff, huffman_code, 0);
+    for (int i = 0; i < 256; ++i) {
+        if (huffman_code[i][0] == 0) continue;
+        printf("%d : %s\n", i, huffman_code[i]);
+    }
+
+}
+
+void output(Pattern*p, int n) {
+    printf("已为您查找完成~~\n");
+    for (int i = 0; i < n; ++i) {
+        printf("%-4d%s 出现的次数:%d\n", i + 1, p[i].str, p[i].freq);
     }
     return ;
 }
 
-void clear_hf(HFNode *root) {
+void search(TNode *root, const char *arm, Pattern *pa, int n, char huffman_code[][100]) {
     if (root == NULL) return ;
-    clear_hf(root->lchild);
-    clear_hf(root->rchild);
-    free(root);
-}
-
-void cntocode(char *str, char *buff, char *huffman_code[]) {
-    int end = 0;
-    for (int i = 0; str[i]; ++i) {
-        if (huffman_code[str[i] + 128] == NULL) continue;
-        strcpy(&buff[end], huffman_code[str[i] + 128]);
-        end += strlen(huffman_code[str[i] + 128]);
-    } 
-    //printf("%s's code: %s\n", str, buff);
+    TNode *p = root;
+    char buff[MAXLINE] = {0}, out[MAXLINE] = {0};
+    memory += MAXLINE * 2;
+    int ind = 0;
+    for (int head = 0; arm[head]; ++head) {
+        for (int i = head; arm[i]; ++i) {
+            if (!p->child[arm[i] - '0']) break; 
+            buff[ind++] = arm[i];
+            buff[ind + 1] = '\0';
+            p = p->child[arm[i] - '0'];
+        }
+        if(p->flag) {
+            long time1 = clock();
+            codetocn(out, buff, huffman_code);
+            for (int i = 0; i < n; ++i) {
+                if (strcmp(out, (char*)pa[i].str) == 0) {
+                    pa[i].freq++;
+                }
+            }
+            memset(out, 0, sizeof(out));
+            long time2 = clock();
+            time0 -= time2 - time1;
+        }
+        ind = 0;
+        p = root;
+    }
     return ;
 }
 
-TNode *insert_trie(char *str, TNode *root) {
-    if (root == NULL) root = get_TNode();
-    TNode *p = root;
-    for (int i = 0; str[i]; ++i) {
-        if (p->child[str[i] - '0'] == NULL) p->child[str[i] - '0'] = get_TNode();
-        p = p->child[str[i] - '0'];
-    }
-    p->flag = 1;
-    return root;
-} 
 
 void clear_trie(TNode *root) {
     if (root == NULL) return ;
@@ -129,122 +289,44 @@ void clear_trie(TNode *root) {
     return ;
 }
 
-void codetocn(char *buff, char *ans, char *huffman_code[]) {
-    //printf("buff : %s\n", buff);
-    int ind = 0, k = 0, len = strlen(buff);
-    while (ind < len) {
-        for (int i = 0; i < CHARMAX; ++i) {
-            if (huffman_code[i] == NULL) continue;
-            if (strncmp(huffman_code[i], &buff[ind], strlen(huffman_code[i])) == 0) {
-                ans[k++] = i - 128;
-                ind += strlen(huffman_code[i]);
-            }
-        }
-    }
-    return ;
+TNode *get_TNode() {
+    memory += sizeof(TNode);
+    node_cnt += 1;
+    return (TNode*)calloc(sizeof(TNode), 1);
 }
 
-void search(TNode *root, const char *arm, char *huffman_code[]) {
-    if (root == NULL) return ;
+
+TNode *insert_trie(TNode *root, const char *str) {
+    if (root == NULL) root = get_TNode();
     TNode *p = root;
-    char buff[MAXLINE] = {0}, out[MAXLINE] = {0};
-    room += MAXLINE * 2;
-    int ind = 0;
-    for (int head = 0; arm[head]; ++head) {
-        for (int i = head; arm[i]; ++i) {
-            if (!p->child[arm[i] - '0']) break; 
-            buff[ind++] = arm[i];
-            buff[ind + 1] = '\0';
-            p = p->child[arm[i] - '0'];
-        }
-        if(p->flag == 1) {
-            p->flag = 2;
-            codetocn(buff, out, huffman_code);
-            printf("find code:%s\n", out);
-            memset(out, 0, sizeof(out));
-        }
-        ind = 0;
-        p = root;
+    for (int i = 0; str[i]; ++i) {
+        if (p->child[str[i] - '0'] == NULL) p->child[str[i] - '0'] = get_TNode();
+        p = p->child[str[i] - '0'];
     }
-    return ;
-}
+    p->flag = 1;
+    return root;
+} 
 
-void get_pattern(int n, int *freq, char **str) {
+int get_pattern(int n, Pattern *p) {
+    int word_cnt = 0;
+    char temp[MAXLINE] = {0};
     for (int i = 0; i < n; ++i) {
-        str[i] = (char*)malloc(sizeof(char) * MAXLINE);
-        room += MAXLINE;
-        scanf("%s", str[i]);
-        for (int j = 0; str[i][j]; ++j) {
-            freq[str[i][j] + 128]++;
-        }
+        scanf("%s", temp);
+        word_cnt += strlen(temp);
+        p[i].str = (unsigned char*)malloc(sizeof(unsigned char) * (strlen(temp) + 1));
+        strcpy((char*)p[i].str, temp);
+        memory += sizeof(char) * strlen((char *)p[i].str);
+        p[i].freq = 0;
     }
-    return ;
+    return word_cnt;
 }
 
-void clear(char **str, int n) {
-    if (str == NULL) return ;
+void clear(Pattern *p, int n) {
+    if (p == NULL) return ;
     for (int i = 0; i < n; ++i) {
-        free(str[i]);
+        free(p[i].str);
     }
-    free(str);
+    free(p);
     return ;
 }
 
-void get_HFcode(int *freq, char *huffman_code[]) {
-    HFNode *arr[CHARMAX] = {0};
-    int code_num = 0;
-    for (int i = 0; i < CHARMAX; ++i) {
-        if (!freq[i]) continue;
-        HFNode *new_node = get_HFNode();
-        new_node->ch = i;
-        new_node->freq = freq[i];
-        arr[code_num++] = new_node;
-    }
-    buildHF(code_num, arr);
-    room += sizeof(HFNode*) * CHARMAX;
-
-    char buff[MAXLINE] = {0};
-    if (code_num != 1) extract(arr[0], buff, 0, huffman_code);
-    else {
-        huffman_code[arr[0]->ch] = (char*)malloc(sizeof(char) * 2);
-        strcpy(huffman_code[arr[0]->ch], "0");
-    }
-    //show_huff(huffman_code);
-    clear_hf(arr[0]);
-    room += sizeof(char*) * CHARMAX;
-    return ;
-}
-
-int main() {
-    int n; 
-    scanf("%d", &n);
-    int freq[CHARMAX] = {0};
-    char **str = (char**)malloc(sizeof(char*) * n);
-    get_pattern(n, freq, str);
-    room += sizeof(int) * CHARMAX + sizeof(char*) * n;
-
-    long time1 = clock();
-    char *huffman_code[CHARMAX] = {0};
-    get_HFcode(freq, huffman_code);
-
-    char buff[MAXLINE * 3] = {0};
-    TNode *root = NULL;
-    for (int i = 0; i < n; ++i) {
-        memset(buff, 0, sizeof(buff));
-        cntocode(str[i], buff, huffman_code);
-        root = insert_trie(buff, root);
-    }
-    
-    long time2 = clock();
-    char arm[MAXLINE];
-    scanf("%s", arm);
-    long time3 = clock();
-    cntocode(arm, buff, huffman_code);
-    search(root, buff, huffman_code);
-    clear_trie(root);
-    clear(str, n);
-    long time4 = clock();
-    room += CHARMAX * 4;
-    printf("run time:%ld, used room:%ld\n", time2 - time1 + time4 - time3, room);
-    return 0;
-}
