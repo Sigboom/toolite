@@ -43,7 +43,7 @@ void get_freq(FILE *fp, int *freq);
 void search(TNode *root, const char *arm, Pattern *p, int n,char huffman_code[][100]);
 void clear_trie(TNode *root);
 TNode *get_TNode();
-void get_pattern(int n, Pattern *p);
+int get_pattern(int n, Pattern *p);
 void clear(Pattern *p, int n);
 TNode *insert_trie(TNode *root, const char *str);
 void output(Pattern*p, int n);
@@ -60,28 +60,30 @@ int main() {
     fp = fopen(filename, "r");
     get_HFcode(fp, huffman_code);
 
-    int n; 
+    int n, word_cnt = 0; 
     printf("请输入模式串的个数：");
     scanf("%d", &n);
     Pattern *pattern = (Pattern*)malloc(sizeof(Pattern) * n);
     printf("请输入%d个模式串【以回车结尾】:\n", n);
-    get_pattern(n, pattern);
+    word_cnt = get_pattern(n, pattern);
     room += (sizeof(Pattern*) * n);
 
     long time1 = clock();
+    int node_cnt = 0;
     char buff[MAXLINE * 10] = {0};
     TNode *root = NULL;
     for (int i = 0; i < n; ++i) {
         memset(buff, 0, sizeof(buff));
         cntocode(pattern[i].str, buff, huffman_code);
         root = insert_trie(root, buff);
+        node_cnt += strlen(buff);
     }
     printf("字典树已建立完成！\n");
     
     long time2 = clock();
     unsigned char arm[MAXLINE * 2];
     printf("亲，请输入要查找模式串的文本：\n");
-    scanf("%[^\n]s", arm);
+    scanf("%s", arm);
     long time3 = clock();
     memset(buff, 0, sizeof(buff));
     cntocode(arm, buff, huffman_code);
@@ -95,6 +97,7 @@ int main() {
     room += CHARMAX * 4;
     
     printf("run time:%ld, used room:%ld\n", time2 - time1 + time4 - time3, room);
+    printf("Haffman Double storage rate : %lf\n", 1.0 * word_cnt / (1.0 * node_cnt * sizeof(TNode)));
     return 0;
 }
 
@@ -281,16 +284,18 @@ TNode *insert_trie(TNode *root, const char *str) {
     return root;
 } 
 
-void get_pattern(int n, Pattern *p) {
+int get_pattern(int n, Pattern *p) {
+    int word_cnt = 0;
     char temp[MAXLINE] = {0};
     for (int i = 0; i < n; ++i) {
         scanf("%s", temp);
         p[i].str = (unsigned char*)malloc(sizeof(unsigned char) * (strlen(temp) + 1));
         room += sizeof(char) * strlen((char *)p[i].str);
+        word_cnt += strlen((char*)p[i].str);
         strcpy((char*)p[i].str, temp);
         p[i].freq = 0;
     }
-    return ;
+    return word_cnt;
 }
 
 void clear(Pattern *p, int n) {
