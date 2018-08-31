@@ -18,3 +18,7 @@ some little tool for work.
 记录文件指针位置使用fgetpos(stream, &filepos)/fsetpos(stream, &filepos)/ftell(stream).<br>使用的类型是fpos_t.
 - 发现存在diff命令可以直接对文件和文件行与行进行对比并显示。
 - 至此暂停（推迟）实现diff
+
+#使用百度思维导图
+##记录平时学习(18.8.31)
+- 在大学中的课程
