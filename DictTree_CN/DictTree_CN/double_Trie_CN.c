@@ -93,7 +93,7 @@ void get_pattern(int n, char **str) {
     return ;
 }
 
-void clear(char **str, int n) {
+void myclear(char **str, int n) {
     if (str == NULL) return ;
     for (int i = 0; i < n; ++i) {
         free(str[i]);
@@ -121,7 +121,7 @@ int main() {
     long time3 = clock();
     search(root, arm);
     clear_trie(root);
-    clear(str, n);
+    myclear(str, n);
     long time4 = clock();
     room += CHARMAX * 3;
     printf("run time:%ld, used room:%ld\n", time2 - time1 + time4 - time3, room);

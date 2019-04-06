@@ -44,7 +44,7 @@ void search(TNode *root, const char *arm, Pattern *p, int n,char huffman_code[][
 void clear_trie(TNode *root);
 TNode *get_TNode();
 int get_pattern(int n, Pattern *p);
-void clear(Pattern *p, int n);
+void Otherclear(Pattern *p, int n);
 TNode *insert_trie(TNode *root, const char *str);
 void output(Pattern*p, int n);
 void get_HFcode(FILE *fp, char (*huffman_code)[100]);
@@ -92,7 +92,7 @@ int main() {
     output(pattern, n);
 
     clear_trie(root);
-    clear(pattern, n);
+    Otherclear(pattern, n);
     long time4 = clock();
     room += CHARMAX * 4;
     
@@ -298,7 +298,7 @@ int get_pattern(int n, Pattern *p) {
     return word_cnt;
 }
 
-void clear(Pattern *p, int n) {
+void Otherclear(Pattern *p, int n) {
     if (p == NULL) return ;
     for (int i = 0; i < n; ++i) {
         free(p[i].str);
