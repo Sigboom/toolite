@@ -48,6 +48,7 @@ void build(int n, hfNode*arr[n]) {
             minNode = *(arr + i);
             ind = i;
         }
+        
         swap(arr[ind], arr[n - times - 1]);
         minNode = arr[0];
         ind = 0;
