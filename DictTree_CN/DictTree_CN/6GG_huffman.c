@@ -1,25 +1,36 @@
 /*************************************************************************
 	> File Name: 6_huffman.c
 	> Author: Daniel
-	> Mail: 292382967@qq.com
+	> Mail: sigboom@163.com
 	> Created Time: 一  7/23 15:16:13 2018
  ************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct hfNode {
     char ch;
     int freq;
     struct hfNode *lchild, *rchild;
 } hfNode;
+
 #define CHAR_NUM 256
+
+
+void inline swap(hfNode **a, hfNode **b) {
+    hfNode **temp = a;
+    a = b;
+    b = temp;
+    return ;
+}
+/*
 #define swap(x, y) { \
     __typeof(x) __temp = x; \
     x = y; \
     y = temp; \
 }
-
+*/
 hfNode *getNode() {
     hfNode *p = (hfNode*)malloc(sizeof(hfNode));
     p->freq = p->ch = 0;
