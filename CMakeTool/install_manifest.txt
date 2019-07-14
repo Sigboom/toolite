@@ -1,0 +1,4 @@
+/Users/daniel/Coder/Github/toolite/CMakeTool/_CPack_Packages/Darwin/TGZ/power-1.0.1-Darwin/bin/power
+/Users/daniel/Coder/Github/toolite/CMakeTool/_CPack_Packages/Darwin/TGZ/power-1.0.1-Darwin/include/config.h
+/Users/daniel/Coder/Github/toolite/CMakeTool/_CPack_Packages/Darwin/TGZ/power-1.0.1-Darwin/bin/libMathFunctions.a
+/Users/daniel/Coder/Github/toolite/CMakeTool/_CPack_Packages/Darwin/TGZ/power-1.0.1-Darwin/include/MathFunctions.h

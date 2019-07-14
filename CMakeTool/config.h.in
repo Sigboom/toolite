@@ -1,0 +1,3 @@
+#cmakedefine HAVE_POW
+#define power_VERSION_MAJOR @power_VERSION_MAJOR@
+#define power_VERSION_MINOR @power_VERSION_MINOR@

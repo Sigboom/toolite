@@ -1,0 +1,77 @@
+Start testing: Jul 14 13:43 CST
+----------------------------------------------------------
+1/4 Testing: test_run
+1/4 Test: test_run
+Command: "/Users/daniel/Coder/Github/toolite/CMakeTool/power" "5" "2"
+Directory: /Users/daniel/Coder/Github/toolite/CMakeTool
+"test_run" start time: Jul 14 13:43 CST
+Output:
+----------------------------------------------------------
+using my power function
+5 ^ 2 = 25
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"test_run" end time: Jul 14 13:43 CST
+"test_run" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/4 Testing: test_5_2
+2/4 Test: test_5_2
+Command: "/Users/daniel/Coder/Github/toolite/CMakeTool/power" "5" "2"
+Directory: /Users/daniel/Coder/Github/toolite/CMakeTool
+"test_5_2" start time: Jul 14 13:43 CST
+Output:
+----------------------------------------------------------
+using my power function
+5 ^ 2 = 25
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Pass Reason:
+Required regular expression found.Regex=[= 25
+]
+"test_5_2" end time: Jul 14 13:43 CST
+"test_5_2" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/4 Testing: test_10_5
+3/4 Test: test_10_5
+Command: "/Users/daniel/Coder/Github/toolite/CMakeTool/power" "10" "5"
+Directory: /Users/daniel/Coder/Github/toolite/CMakeTool
+"test_10_5" start time: Jul 14 13:43 CST
+Output:
+----------------------------------------------------------
+using my power function
+10 ^ 5 = 100000
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Pass Reason:
+Required regular expression found.Regex=[= 100000
+]
+"test_10_5" end time: Jul 14 13:43 CST
+"test_10_5" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/4 Testing: test_2_10
+4/4 Test: test_2_10
+Command: "/Users/daniel/Coder/Github/toolite/CMakeTool/power" "2" "10"
+Directory: /Users/daniel/Coder/Github/toolite/CMakeTool
+"test_2_10" start time: Jul 14 13:43 CST
+Output:
+----------------------------------------------------------
+using my power function
+2 ^ 10 = 1024
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Pass Reason:
+Required regular expression found.Regex=[= 1024
+]
+"test_2_10" end time: Jul 14 13:43 CST
+"test_2_10" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Jul 14 13:43 CST
