@@ -1,0 +1,7 @@
+*.[oa]
+*.exe
+*.cbp
+.exe
+.vs/
+
+Debug
