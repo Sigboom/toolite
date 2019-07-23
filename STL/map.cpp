@@ -5,12 +5,40 @@
 using namespace std;
 
 int main() {
-    map<int, string> mapStudent;
-    mapStudent.insert(pair<int, string>(1, "student_one"));
-    mapStudent.insert(pair<int, string>(2, "student_two"));
-    mapStudent.insert(pair<int, string>(3, "student_three"));
-    map<int, string>::iterator iter;
-    for(iter = mapStudent.begin(); iter != mapStudent.end(); iter++)
+    map<string, size_t> student{{"Ann", 25}, {"Bill", 46}};
+    map<string, size_t> person {begin(student), end(student)};
+    
+    student.insert(make_pair("Jack", 32));
+    student.insert(pair<string, size_t>("Jill", 56));
+    person.insert(pair<string, size_t>("Daniel", 23));
+    map<string, size_t>::iterator iter;
+    student.emplace("Ann",25); 
+    student.emplace("Cnn",25); 
+    
+    for(iter = student.begin(); iter != student.end(); iter++)
        cout<<iter->first<<' '<<iter->second<<endl;
+    
+    string key;
+    try{
+    	key = string("Jack");
+    	size_t age = student.at(key);
+    	cout << key << " : " << age << endl;
+    } catch (const out_of_range &e) {
+    	cerr << e.what() << "\n" << key << "was no found." << endl;
+    }
+    
+    try{
+    	key = string("Daniel");
+    	size_t age = student.at(key);
+    	cout << key << " : " << age << endl;
+    } catch (const out_of_range &e) {
+    	cerr << e.what() << "\n" << key << "was no found." << endl;
+    }
+    
+    //相对的下标运算符如果没有该元素会产生一个新的元素
+    size_t new_val = student["Daniol"];
+
+    cout << "student['Daniol'] : " << new_val << endl;
+
     return 0;
 }
