@@ -12,6 +12,7 @@ int main() {
     student.insert(pair<string, size_t>("Jill", 56));
     person.insert(pair<string, size_t>("Daniel", 23));
     map<string, size_t>::iterator iter;
+    //C++11
     student.emplace("Ann",25); 
     student.emplace("Cnn",25); 
     
@@ -40,5 +41,7 @@ int main() {
 
     cout << "student['Daniol'] : " << new_val << endl;
 
+    cout << "student.find('Daniel') : " << student.find("Daniel");
+    cout << "student.count('Daniel') : " << student.count("Daniel");
     return 0;
 }
