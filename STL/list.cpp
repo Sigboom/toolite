@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <list>
 
 using namespace std;
@@ -15,9 +16,30 @@ int main () {
     list<int> fifth (myints, myints + sizeof(myints) / sizeof(int) );
 
     cout << "The contents of fifth are: ";
-    for (std::list<int>::iterator it = fifth.begin(); it != fifth.end(); it++)
+    for (list<int>::iterator it = fifth.begin(); it != fifth.end(); it++)
         cout << *it << ' ';
+    cout << endl;
 
+    for (int i = 0; i < 5; ++i) first.push_back(i);
+    list<int>::iterator it = first.begin();
+    ++it;
+    first.insert(it, 10);
+    first.insert(it, 2, 20);
+    it--;
+    vector<int> myvector(2, 30);
+    first.insert(it, myvector.begin(), myvector.end());
+    for (list<int>::iterator it = first.begin(); it != first.end(); ++it) {
+    	cout << " " << *it;
+    }
+    cout << endl;
+
+    it = first.end();
+    //first.erase(it); it is danger
+    it--;
+    first.erase(it);
+    for (list<int>::iterator it = first.begin(); it != first.end(); ++it) {
+    	cout << " " << *it;
+    }
     cout << endl;
     return 0;
 }
