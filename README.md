@@ -29,3 +29,64 @@ some little tool for work.
 - 这个git project就决定做一些工具的测试，小型Demo的集结
 ##学习并尝试使用C++的STL(19.8.4)
 
+##尝试使用CPython和C/C++静态库的一套东西(19.8.10)
+1. C/C++ 生成静态库方法
+	1. 编译要生成静态库的函数文件(api.cpp)
+			
+			g++ -c api.cpp  
+		生成api.o, 然后使用ar命令生成静态库文件(libapi.o)
+			
+			ar crv libapi.a api.o
+	2. C/C++调用时第一步首先要包含对应函数的声明，其次链接静态库
+		
+			g++ -o output main.cpp libapi.a
+2. C/C++ 生成动态库方法
+	- 纯C程序可直接执行命令来生成动态库
+		
+			g++ -shared -fPIC -o libpuerC.so pureC.c
+		生成.so动态链接库, C/C++使用时直接链接就好
+			
+			g++ -o output main.cpp libpureC.so
+3. python 调用.so 动态链接库方法
+	
+	```py
+	import ctypes
+	
+	libcaller = ctypes.cdll.LoadLibrary
+	lib = libcaller("./libpuerC.so")
+	lib.hello() #调用动态库中方法
+	```	
+	生成动态库时， c++源文件需要使用
+	
+	```c
+	 extend "C"{
+		//将要调用的方法实现
+		int add(int a, int b) {
+			return a + b;
+		}
+	}
+	```
+4. python 调用C/C++可执行程序, 需要使用os与commands模块，main为C/C++编译后文件
+	> import os<br>
+	> import commands
+	
+	1. 使用获取返回值与输出的方式：
+		
+		```py
+		if os.path.exists(main):
+			rc, out = commands.getstatusoutput(main)
+			print("rc = %d, out = %s" % (rc, out)
+		```	 
+	2. 使用管道方式
+		
+		```py
+		f = os.popen(main)
+		data = f.readlines()
+		f.close()
+		print(data)
+		```
+	3. 使用系统调用
+		
+		```py
+		os.system(main)
+		```
