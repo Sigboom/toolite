@@ -6,8 +6,7 @@
 
 using namespace std;
 
-class mycomparison
-{
+class mycomparison {
   bool reverse;
 public:
   mycomparison(const bool& revparam=false)
@@ -19,8 +18,7 @@ public:
   }
 };
 
-int main ()
-{
+int main () {
   int myints[]= {10,60,50,20};
 
   std::priority_queue<int> first;
