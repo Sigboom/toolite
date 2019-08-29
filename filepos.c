@@ -8,13 +8,12 @@
 #include <stdio.h>
 
 void showpos(FILE *stream);
-int main(void)
-{
+int main(void) {
     FILE *stream;
     fpos_t filepos;
     stream = fopen("a", "w+");
     fgetpos(stream, &filepos);
-    fprintf(stream, "This is a test");
+    fprintf(stream, "This is a test\n");
     showpos(stream);
     if (fsetpos(stream, &filepos) == 0)
         showpos(stream);

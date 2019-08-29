@@ -3,5 +3,6 @@
 *.cbp
 .exe
 .vs/
+*.out
 
 Debug
