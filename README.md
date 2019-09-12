@@ -90,3 +90,9 @@ some little tool for work.
 		```py
 		os.system(main)
 		```
+##尝试实现SkipList（19.9.12）
+###第一个目的是要将过去使用C的习惯改为使用C++
+- 习惯使用面对对象的思维来考虑问题
+###实现一层跳表
+- 实现基本功能：remove initialize insert ...
+- 使用makefile
