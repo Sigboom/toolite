@@ -7,7 +7,7 @@
 
 #include "list.h"
 
-list::list() : length(0), _listHead(NULL), _listEnd(NULL) {}
+list::list() : length(0), _listHead(NULL) {}
 
 list::~list() {
         clean(_listHead);
@@ -15,7 +15,7 @@ list::~list() {
     
 void list::initialize() {
     clean(_listHead);
-    _listHead = _listEnd = NULL;
+    _listHead = NULL;
     length = 0;
     return ;
 }
@@ -30,7 +30,8 @@ void list::initialize() {
 bool list::find(int key, listNode *node = NULL) {
     listNode vir;
     vir.next = _listHead;
-    for (listNode *p = &vir; p->next; p = p->next) {
+    listNode *p;
+    for (p = &vir; p->next; p = p->next) {
         if (p->next->key >= key) {
             if(node) {
                 if (p != &vir) node->next = p;
@@ -39,16 +40,12 @@ bool list::find(int key, listNode *node = NULL) {
             return p->next->key == key;
         } 
     }
+    node->next = p;
     return false; 
 }
 
-void list::insert(int key, int val) {
-    if (length == 0) {
-        _listHead = getNewNode(key, val);
-        _listEnd = _listHead;
-        length++;
-        return ;
-    }
+int list::update(int key, int val) {
+    if (length == 0) return -1;
     listNode *node = getNewNode(key, val);
     
     if(find(key, node)) {
@@ -56,20 +53,31 @@ void list::insert(int key, int val) {
             _listHead->value = val;
         } else node->next->next->value = val; 
         deleteListNode(node);
+    } else return -1;
+    return 0;
+}
+
+int list::insert(int key, int val) {
+    if (length == 0) {
+        _listHead = getNewNode(key, val);
+        return 0;
+    }
+    listNode *node = getNewNode(key, val);
+    
+    if(find(key, node)) {
+        deleteListNode(node);
+        return -1;
     } else {
         if (node->next == node) {
             node->next = _listHead;
             _listHead = node;
-        } else if (node->next) {
+        } else {
             listNode *temp = node->next;
             node->next = temp->next;
             temp->next = node;
-        } else {
-            _listEnd->next = node;
-            _listEnd = node;
         }
     }
-    return ;
+    return 0;
 }
 
 int list::remove(int key) {
@@ -83,11 +91,10 @@ int list::remove(int key) {
             node->next = temp->next;
             temp->next = temp->next->next;
         }
-        if (node->next == _listEnd) _listEnd = temp;
         deleteListNode(node->next);
         deleteListNode(node);
-        length--;
     } else {
+        deleteListNode(node);
         return -1;
     }
     return 0;
@@ -136,8 +143,14 @@ int main() {
     list *num_list = new list;
     for (int i = 9; i >= 0; --i) {
         num_list->insert(i, rand());
+        num_list->remove(i);
     }
     num_list->show();
+    
+    cout << "update: " << num_list->update(1, 1) << endl;
+    num_list->insert(1, 2);
+    num_list->show();
+
     int key = 5;
     if (num_list->remove(key)) {
         cout << "num_list remove error!" << endl;    

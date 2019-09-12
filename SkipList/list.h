@@ -20,6 +20,12 @@ using std::endl;
 
 class listNode {
 public:
+    void show_node() {
+        cout << key << " : " << value;
+        return ;
+    }
+
+public:
     virtual ~listNode(){}
     int key;
     int value;
@@ -41,7 +47,6 @@ class list {
 public:
     list();
     virtual ~list();
-    
     virtual void initialize();
     
     /* Define date: 2019.9.6
@@ -53,9 +58,10 @@ public:
      */
     virtual bool find(int key, listNode *);
     
-    virtual void insert(int key, int val);
-    int remove(int key);
-    void show();
+    virtual int insert(int key, int val);
+    virtual int update(int key, int val);
+    virtual int remove(int key);
+    virtual void show();
     
 protected:
     listNode *getNewNode(int key = 0, int val = 0, listNode *next = NULL);
@@ -65,7 +71,6 @@ protected:
 protected:
     int length;
     listNode *_listHead;
-    listNode *_listEnd;
 };
     
 
