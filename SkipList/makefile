@@ -1,21 +1,22 @@
 CC = g++
 
-STD = -std=c++11
+CFLAGS_WARN = -g -Wall
 
-INCLUDE = 
+std = -std=c++11
 
-Wall = 
+Include=
 
-.PHONY:clean
+.PHONY:
+	clean
 
-skip_list: list.o skip_list.o
-	$(CC) $(STD) -o skip_list list.o skip_list.o 
+skips_list: list.o skips_list.o
+	$(CC) $(std) $(CFLAGE_WARN) -o skips_list list.o skips_list.o
 
-skip_list.o: skip_list.cpp list.h
-	$(CC) -c $(STD) -o skip_list.o skip_list.cpp
+list.o: base_list/list.cpp base_list/list.h
+	$(CC) $(std) $(CFLAGE_WARN) -c -o list.o base_list/list.cpp
 
-list.o: list.cpp list.h
-	$(CC) -c $(STD) -o list.o list.cpp 
+skips_list.o: skips_list.cpp skips_list.h
+	$(CC) $(std) $(CFLAGE_WARN) -c -o skips_list.o skips_list.cpp
 
 clean:
-	rm list.o skip_list.o skip_list
+	rm *.o skips_list
