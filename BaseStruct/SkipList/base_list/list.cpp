@@ -140,7 +140,6 @@ int main() {
     list *num_list = new list;
     for (int i = 9; i >= 0; --i) {
         num_list->insert(i, rand());
-        num_list->remove(i);
     }
     num_list->show();
     

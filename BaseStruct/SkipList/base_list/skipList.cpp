@@ -67,7 +67,8 @@ bool skipList::find(int key, listNode *node, skipListNode *skipNode) {
     node->set_next(find_list(key, skipNode->get_next()->get_down()));
     if (node->get_next()->get_next())
         return node->get_next()->get_next()->get_key() == key;
-    else return false;
+    
+    return false;
 }
 
 int skipList::update(int key, int val) {
@@ -205,7 +206,7 @@ int skipList::remove(int key) {
             _listHead = _listHead->get_next();
         } else {
             //删除的不是头结点
-            if (skipTemp->get_next()->get_down() == temp->get_next()) {
+            if (skipTemp->get_next() && skipTemp->get_next()->get_down() == temp->get_next()) {
                 if(!skipTemp->get_next()->minus_count()) {
                     skipListNode *skipDeleteNode = skipTemp->get_next();
                     skipTemp->set_next(skipDeleteNode->get_next());
@@ -213,7 +214,9 @@ int skipList::remove(int key) {
                 } else {
                     skipTemp->get_next()->set_down(skipTemp->get_next()->get_down()->get_next());
                 }
-            } else skipTemp->minus_count();
+            } else {
+                skipTemp->minus_count();
+            }
             node->set_next(temp->get_next());
             temp->set_next(temp->get_next()->get_next());
         }
@@ -256,9 +259,11 @@ int main() {
     }
     //num_skip->show_node(num_skip->getListHead());
     num_skip->show();
+    cout << "update: " << num_skip->update(3, 5) << endl;
+    num_skip->show();
     int key = 7;
     //remove函数出现段错误，待改正
-    //cout << "remove : " << num_skip->remove(key) << endl;
+    cout << "remove : " << num_skip->remove(key) << endl;
     num_skip->show();
     delete num_skip;
     return 0;

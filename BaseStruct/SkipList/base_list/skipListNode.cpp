@@ -63,7 +63,7 @@ int skipListNode::add_count() {
 }
 
 int skipListNode::minus_count() {
-    return ++count;
+    return --count;
 }
 
 void skipListNode::set_down(listNode *down) {
