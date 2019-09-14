@@ -7,6 +7,10 @@
 
 #include "list.h"
 
+using std::cout;
+using std::cin;
+using std::endl;
+
 list::list() : length(0), _listHead(NULL) {}
 
 list::~list() {

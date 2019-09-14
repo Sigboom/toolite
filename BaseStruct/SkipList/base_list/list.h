@@ -11,10 +11,6 @@
 #include "listNode.h"
 #include <typeinfo>
 
-using std::cout;
-using std::cin;
-using std::endl;
-
 /* list:
  * 已实现操作:
  *  initialize() 将链表初始化

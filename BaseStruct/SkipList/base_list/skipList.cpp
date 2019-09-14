@@ -7,6 +7,9 @@
 
 #include "skipList.h"
 
+using std::cout;
+using std::endl;
+
 skipList::skipList(int step) :
     _skipListHead(NULL), skipLength(0), step(step) {
     }
