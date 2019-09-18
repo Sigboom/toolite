@@ -10,7 +10,7 @@
 
 #include <iostream>
 #include "list.h"
-#include "skipListNode.h"
+#include "skipNode.h"
 
 #define MAXSTEP 4
 
@@ -24,8 +24,8 @@ public:
     listNode *find_list(int key, listNode *node);
     bool find(int key, listNode *node, skipListNode *skipNode);
 
-    int update(int key, int val) final;
-    int insert(int key, int val) final;
+    int update(int key, int val);
+    int insert(int key, int val);
     
     template <typename T>
     void show_list(T *node);
@@ -38,7 +38,7 @@ public:
     listNode *getListHead();
 
     void linkDownNode(skipListNode *skipNode, listNode *node);
-    int remove(int key) final;
+    int remove(int key);
 
 private:
     skipListNode *getNewSkipNode( 

@@ -1,5 +1,5 @@
 /*************************************************************************
-	> File Name: skip_list.cpp
+	> File Name: skipList.cpp
 	> Author: Doni Daniel
 	> Mail: sigboom@163.com
 	> Created Time: 五  9/ 6 18:18:02 2019
@@ -116,6 +116,8 @@ int skipList::insert(int key, int val) {
      */
     if (skipNode->get_next() == skipNode) {
         //待插入节点为头结点
+        node->set_next(_listHead);
+        _listHead = node;
         if (_skipListHead->get_count() < step) {
             _skipListHead->add_count();
             _skipListHead->set_down(node);
@@ -125,10 +127,11 @@ int skipList::insert(int key, int val) {
             _skipListHead = skipNode;
             skipNode->set_down(node);
         }
-        node->set_next(_listHead);
-        _listHead = node;
     } else {
         //待插入节点不是头结点  
+        listNode *temp = node->get_next();
+        node->set_next(temp->get_next());
+        temp->set_next(node);
         if (skipNode->get_next()->get_count() < step) {
             skipNode->get_next()->add_count();
             deleteSkipListNode(skipNode);
@@ -140,9 +143,6 @@ int skipList::insert(int key, int val) {
             skipNode->set_next(skipTemp->get_next());
             skipTemp->set_next(skipNode);
         }
-        listNode *temp = node->get_next();
-        node->set_next(temp->get_next());
-        temp->set_next(node);
     }
     return 0;
 }

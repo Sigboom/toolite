@@ -1,22 +1,19 @@
+Target = skipsList
+
 CC = g++
+Wall = -g -Wall
+STD = -std=c++11
 
-CFLAGS_WARN = -g -Wall
+CC_ARGS = $(Wall) $(STD) -o
 
-std = -std=c++11
-
-Include=
+BASE_OBJ = baseList/list.o baseList/listNode.o baseList/skipNode.o
+OBJ = skipsList.o
 
 .PHONY:
 	clean
 
-skips_list: list.o skips_list.o
-	$(CC) $(std) $(CFLAGE_WARN) -o skips_list list.o skips_list.o
-
-list.o: base_list/list.cpp base_list/list.h
-	$(CC) $(std) $(CFLAGE_WARN) -c -o list.o base_list/list.cpp
-
-skips_list.o: skips_list.cpp skips_list.h
-	$(CC) $(std) $(CFLAGE_WARN) -c -o skips_list.o skips_list.cpp
+$(Target): $(OBJ)
+	$(CC) $(CC_ARGS) $(Target) $(BASE_OBJ) $(OBJ)
 
 clean:
-	rm *.o skips_list
+	-rm  $(OBJ) $(Target)
