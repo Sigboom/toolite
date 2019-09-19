@@ -92,28 +92,34 @@ bool skipsList::find(int key, listNode *node, skipListNode **skips) {
 }
 
 int skipsList::update(int key, int val) {
-/*
-    if (skipLength == 0) return -1;
+    if (length == 0) return -1;
     int res = -1;
-    skipListNode *skipNode = getNewSkipNode();
+    skipListNode **skips = getNewSkips();
     listNode *node = getNewNode(key, val);
-    if (find(key, node, skipNode)) {
-        if (skipNode->get_next() == skipNode) {
-            _skipListHead->set_value(val);
-            _skipListHead->get_down()->set_value(val);
+    if (find(key, node, skips)) {
+        if (skips[level - 1]->get_next() == skips[level - 1]) {
+            skipListNode *skipNode = _skipListHead;
+            for (int i = 0; i < level; ++i) {
+                skipNode->set_value(val);
+                ++i;
+                if (i >= level) break;
+                skipNode = dynamic_cast<skipListNode *>(skipNode->get_down());
+            }
+            _listHead->set_value(val);
         } else {
-            if (skipNode->get_next()->get_next() &&
-                    skipNode->get_next()->get_next()->get_down() == node->get_next()->get_next())
-                skipNode->get_next()->get_next()->set_value(val);
+            for (int i = 0; i < level; ++i) {
+                if (skips[i]->get_next()->get_next() &&
+                        skips[i]->get_next()->get_next()->get_key() == key) {
+                    skips[i]->get_next()->get_next()->set_value(val);
+                }
+            }
             node->get_next()->get_next()->set_value(val);
         }
         res = 0;
     }
-    deleteSkipListNode(skipNode);
+    deleteSkips(skips);
     deleteListNode(node);
     return res;
-*/
-    return 0;
 }
 skipListNode **skipsList::getNewSkips() {
     skipListNode **newSkips = new skipListNode*[level];
@@ -292,20 +298,21 @@ listNode *skipsList::getListHead() {
     return this->_listHead;
 }
 
+//删除未完成
 int skipsList::remove(int key) {
-/*
     listNode *node = getNewNode();
-    skipListNode *skipNode = getNewSkipNode();
+    skipListNode **skips = getNewSkips();
     int res = -1;
-    if (find(key, node, skipNode)) {
+    if (find(key, node, skips)) {
         listNode *temp = node->get_next();
-        skipListNode *skipTemp = skipNode->get_next();
-        if (skipNode->get_next() == skipNode) {
-            //删除的是头结点
-            skipNode->set_next(_skipListHead);
+        skipListNode *skipTemp = skips[level - 1]->get_next();
+        if (skipTemp == skips[level - 1]) {
+            //TODO 删除的是头结点
+            skips[level - 1]->set_next(_skipListHead);
+            skipTemp = skips[level - 1]->get_next();
             if (!_skipListHead->minus_count()) {
                 _skipListHead = _skipListHead->get_next();
-                deleteSkipListNode(skipNode->get_next());
+                deleteSkipListNode(skipTemp);
             }  else
                 _skipListHead->set_down(_skipListHead->get_down()->get_next());
             node->set_next(_listHead);
@@ -329,11 +336,9 @@ int skipsList::remove(int key) {
         deleteListNode(node->get_next());
         res = 0;
     }
-    deleteSkipListNode(skipNode);
+    deleteSkips(skips);
     deleteListNode(node);
     return res;
-*/
-    return 0;
 }
 
 skipListNode *skipsList::getNewSkipNode( 
@@ -370,17 +375,18 @@ void skipsList::skipsClean(skipListNode *skipNode) {
 
 int main() {
     skipsList *num_skip = new skipsList;
-    for (int i = 6; i > 0; --i) {
+    for (int i = 17; i > 0; --i) {
         num_skip->insert(i, rand());
     }
     num_skip->show();
-    /*
-    cout << "update: " << num_skip->update(3, 5) << endl;
+    
+    cout << "update: " << num_skip->update(14, 5) << endl;
     num_skip->show();
+    
     int key = 7;
     cout << "remove : " << num_skip->remove(key) << endl;
     num_skip->show();
-    */
+    
     delete num_skip;
     return 0;
 }
