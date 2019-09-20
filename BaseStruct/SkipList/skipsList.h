@@ -49,6 +49,7 @@ private:
     listNode *find_list(int key, listNode *node, int level = 0);
     bool merge_skipNode(skipListNode *currentNode, int level);
     int add_level();
+    void minus_level();
 
 private:
     skipListNode *_skipListHead;
