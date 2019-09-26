@@ -26,12 +26,16 @@ some tools for work.
 		<td><a href="#macdown">macdown</a></td>
 		<td><a href="#baidunaotu">百度脑图</a></td>
 	</tr>
+	<tr align="center">
+		<td>特殊处理</td>
+		<td><a href="#ds_store">.DS_Store</a></td>	</tr>
 
 </table>
 
 #简介
 &nbsp;&nbsp;这个仓库是用来一些个人工具使用或者制作的记录<br>
-以下简介只包括基础结构与工具开发
+&nbsp;&nbsp;可以点击表格中的连接来跳转到您关心的内容<br>
+<center>**以下简介只包括基础结构与工具开发**</center>
 ##skiplist
 1. skiplist节点继承list
 2. 在list的基础上，建立跳表索引
@@ -61,22 +65,24 @@ some tools for work.
         
         git status
 
-##线性表整理2（18.6.28） 
-###发现意外收获
+<a name="ds_store">
+##.DS_Store（18.6.28）
+</a>
+
 1. 想首先查看仓库的状态却偶然发现 .DS_Store 文件。大体了解了一些知识，它的产生和macOS系统密切相关，类似于Windows系统里的desktop.ini。具体了解及处理方式参考
 <https://www.jianshu.com/p/fdaa8be7f6c3>
 - 执行步骤
     
-    >删除项目中的所有.DS_Store。这会跳过不在项目中的 .DS_Store <br>
-    >1.find . -name .DS_Store -print0 | xargs -0 git rm -f --ignore-unmatch <br>
-    >将 .DS_Store 加入到 .gitignore <br>
-    >2.echo .DS_Store >> ~/.gitignore <br>
+    > 删除项目中的所有.DS_Store。这会跳过不在项目中的 .DS_Store <br>
+    > find . -name .DS_Store -print0 | xargs -0 git rm -f --ignore-unmatch <br>
+    > 将 .DS_Store 加入到 .gitignore <br>
+    > echo .DS_Store >> ~/.gitignore <br>
     >更新项目 <br>
-    >3.git add --all <br>
-    >4.git commit -m '.DS_Store banished!' <br>
-- 执行以上步骤为在以上传的工程中。
+    > git add --all <br>
+    > git commit -m '.DS_Store banished!' <br>
+- 执行以上步骤为在已上传的工程中。
 
-###进行头文件封装操作
+##进行头文件封装操作（18.6.29）
 1. 将昨天编写的函数封装进 arr_base.h 文件，并使用main.c对其进行调用
 - 查找C/C++编程规范，得到如下结果：
 <https://blog.csdn.net/wr132/article/details/65635003>
@@ -304,7 +310,9 @@ some tools for work.
 ##macdown（19.9.24）
 </a>
 
-- jekyll:
+- jekyll: 支持头信息
+	
+	> 偏好设置 -->Rendering -->检测Jekyll头部参数 
 - toc标签：markdown自动生成目录
 	- 一开始使用 Macdown 中[toc] 标签是无法生成目录的，需要打开
 	
@@ -313,3 +321,15 @@ some tools for work.
 <a name="jekyll">
 ##jekyll
 </a>
+
+```jekyll
+---
+layout: post
+title: Blogging Like a Hacker
+---
+```
+<p style="text-indent:2em">
+在这两行的三虚线之间，你可以设置一些预定义的变量（下面这个例子可以作为参考）或者甚至创建一个你自己定义的变量。这样在接下来的文件和任意模板中或者在包含这些页面或博客的模板中都可以通过使用 Liquid 标签来访问这些变量。
+</p>
+具体细节连接：
+[YAML头信息](http://wiki.jikexueyuan.com/project/jekyll/frontmatter.html)
