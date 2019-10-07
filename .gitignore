@@ -6,5 +6,7 @@
 *.out
 
 BaseStruct/SkipList/skipsList
+CMakeTool/CMakeCache.txt
 Debug
+test.c*
 .DS_Store

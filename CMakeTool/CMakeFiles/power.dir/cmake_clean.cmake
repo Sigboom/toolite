@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/power.dir/main.cpp.o"
-  "power.pdb"
   "power"
+  "power.pdb"
 )
 
 # Per-language clean rules from dependency scanning.

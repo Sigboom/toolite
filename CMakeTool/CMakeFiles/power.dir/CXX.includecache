@@ -6,17 +6,17 @@
 
 #IncludeRegexTransform: 
 
-/Users/daniel/Coder/Github/toolite/CMakeTool/config.h
+/Users/daniel/Documents/Github/toolite/CMakeTool/config.h
 
-/Users/daniel/Coder/Github/toolite/CMakeTool/main.cpp
+/Users/daniel/Documents/Github/toolite/CMakeTool/main.cpp
 iostream
 -
 config.h
-/Users/daniel/Coder/Github/toolite/CMakeTool/config.h
+/Users/daniel/Documents/Github/toolite/CMakeTool/config.h
 cmath
 -
 math/MathFunctions.h
-/Users/daniel/Coder/Github/toolite/CMakeTool/math/MathFunctions.h
+/Users/daniel/Documents/Github/toolite/CMakeTool/math/MathFunctions.h
 
-/Users/daniel/Coder/Github/toolite/CMakeTool/math/MathFunctions.h
+/Users/daniel/Documents/Github/toolite/CMakeTool/math/MathFunctions.h
 
