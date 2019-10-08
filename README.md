@@ -7,34 +7,51 @@ some tools for work.
 		<th colspan=10>分类内容</th>
 	</tr>
 	<tr align="center">
-		<td>基础结构</td>
+		<td rowspan=4>基础结构</td>
+		<td>linear</td>
 		<td><a href="#skiplist">skiplist</td>
+	</tr>
+	<tr  align="center">
+		<td>tree</td>
+	</tr>
+	<tr  align="center">
+		<td>map</td>
+	</tr>
+	<tr  align="center">
+		<td>STL</td>
+		<td>string</td>
 	</tr>
 	<tr align="center">
 		<td>工具开发</td>
 		<td><a href="#diff">diff</a></td>
+		<td><a href="#dictTree_CN">DictTree_CN</a></td>
+		<td><a href="#testToolkit">TestToolkit</a></td>
 	</tr>
 	<tr align="center">
 		<td>开发工具使用</td>
 		<td><a href="#cmake">cmake</a></td>
-		<td><a href="#cpython">cpython</a></td>
-		<td><a href="#github">github</a></td>
-		<td><a href="#jekyll">jekyll</a></td>
+		<td><a href="#cpython">Cpython</a></td>
+		<td><a href="#github">Github</a></td>
+		<td><a href="#jekyll">Jekyll</a></td>
 	</tr>
 	<tr align="center">
 		<td>应用工具使用</td>
-		<td><a href="#macdown">macdown</a></td>
+		<td><a href="#macdown">MacDown</a></td>
 		<td><a href="#baidunaotu">百度脑图</a></td>
 	</tr>
 	<tr align="center">
 		<td>特殊处理</td>
-		<td><a href="#ds_store">.DS_Store</a></td>	</tr>
+		<td><a href="#ds_store">.DS_Store</a></td>		<td><a href="#algorithm">Algorithm</a></td>
+		<td><a href="#sortFind">SortFind</a></td>
+		<td><a href="#problems">Problems</a></td>
+	</tr>
 
 </table>
 
 #简介
 &nbsp;&nbsp;这个仓库是用来一些个人工具使用或者制作的记录<br>
 &nbsp;&nbsp;可以点击表格中的连接来跳转到您关心的内容<br>
+&nbsp;&nbsp;如果无法跳转，说明我没有记录，但存在源码<br>
 <center>**以下简介只包括基础结构与工具开发**</center>
 ##skiplist
 1. skiplist节点继承list
