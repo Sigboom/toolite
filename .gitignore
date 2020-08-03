@@ -4,9 +4,14 @@
 .exe
 .vs/
 *.out
+*/*.out
+*/*/*.out
+*/*/*/*.out
+*/*/*/*/*.out
+*/*/*/*/*/*.out
 
 BaseStruct/SkipList/skipsList
 CMakeTool/CMakeCache.txt
 Debug
 test.c*
-.DS_Store
+*.DS_Store

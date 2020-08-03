@@ -223,12 +223,12 @@ def varAnd(population, cxpb, mutpb):
     return offspring
 
 # 主函数
-def main():
-    # random.seed(300)
+if __name__ == "__main__":
+    random.seed(300)
     # 初始化种群，计算适应度值并将适应度值添加到个体最后
     pop = []
-    for i in range(Population_Size):
-        individual = sample_ind(IND_SIZE)
+    for i in range(Population_Size): # 100
+        individual = sample_ind(IND_SIZE) #13
         fitness = -evalTSP(individual)
         individual.append(fitness)
         pop.append(individual)
@@ -253,9 +253,4 @@ def main():
     site = indSplit(Best[0:IND_SIZE])
     for i in site.keys():
         print('选址点：', i, ' 需求点：', site.get(i))
-    print('年总成本为：', -Best[-1]/1000, '万元')
-
-if __name__ == "__main__":
-    main()
-    os.system("pause");
-
+    print('年总成本为：', -Best[-1]/10000, '万元')
